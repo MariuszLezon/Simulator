@@ -1,17 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Simulator;
+﻿namespace Simulator;
 
 public class Creature
 {
-    public string Name { get; set; } = "Unknown";
-    public int Level { get; set; } = 1;
+    private string _name = "Unknown"; 
+    private int _level = 1;          
+    private bool _isNameSet = false; 
+    private bool _isLevelSet = false; 
 
-    public Creature(string name, int level = 1)
+    public string Name
+    {
+        get => _name;
+        set
+        {
+            if (_isNameSet)
+                throw new InvalidOperationException("Name can only be set once.");
+
+            string trimmedName = value.Trim();
+
+            
+            if (trimmedName.Length < 3)
+                trimmedName = trimmedName.PadRight(3, '#');
+
+            
+            if (trimmedName.Length > 25)
+                trimmedName = trimmedName.Substring(0, 25).TrimEnd();
+
+            
+            if (char.IsLower(trimmedName[0]))
+                trimmedName = char.ToUpper(trimmedName[0]) + trimmedName.Substring(1);
+
+            _name = trimmedName;
+            _isNameSet = true;
+        }
+    }
+
+    public int Level
+    {
+        get => _level;
+        set
+        {
+            if (_isLevelSet)
+                throw new InvalidOperationException("Level can only be set once.");
+
+           
+            if (value < 1)
+                _level = 1;
+            else if (value > 10)
+                _level = 10;
+            else
+                _level = value;
+
+            _isLevelSet = true;
+        }
+    }
+
+    public Creature(string name = "Unknown", int level = 1)
     {
         Name = name;
         Level = level;
@@ -21,8 +64,14 @@ public class Creature
 
     public void SayHi()
     {
-        Console.WriteLine($"Hi, I'm {Name} at level {Level}!");
+        Console.WriteLine($"Hi, I am {Name} and I am level {Level}.");
     }
 
     public string Info => $"{Name} <{Level}>";
+
+    public void Upgrade()
+    {
+        if (Level < 10)
+            _level++;
+    }
 }

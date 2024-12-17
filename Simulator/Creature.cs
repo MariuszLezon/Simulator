@@ -1,97 +1,28 @@
-﻿namespace Simulator;
+﻿using System;
 
-public class Creature
+namespace Simulator
 {
-    private string _name = "Unknown";
-    private int _level = 1;
-    private bool _isNameSet = false;
-    private bool _isLevelSet = false;
-
-    public string Name
+    public abstract class Creature
     {
-        get => _name;
-        set
+        public string Name { get; set; }
+        private int _level;
+        public int Level
         {
-            if (_isNameSet)
-                throw new InvalidOperationException("Name can only be set once.");
-
-            string trimmedName = value.Trim();
-
-            
-            if (trimmedName.Length < 3)
-                trimmedName = trimmedName.PadRight(3, '#');
-
-            if (trimmedName.Length > 25)
-                trimmedName = trimmedName.Substring(0, 25).TrimEnd();
-
-            if (trimmedName.Length < 3)
-                trimmedName = trimmedName.PadRight(3, '#');
-
-            if (char.IsLower(trimmedName[0]))
-                trimmedName = char.ToUpper(trimmedName[0]) + trimmedName.Substring(1);
-
-            _name = trimmedName;
-            _isNameSet = true;
+            get => _level;
+            set => _level = Validator.Limiter(value, 1, 10);
         }
-    }
 
-    public int Level
-    {
-        get => _level;
-        set
+        public abstract int Power { get; }
+        public abstract string Info { get; }
+
+        public Creature(string name = "Unknown", int level = 1)
         {
-            
-            if (value < 1)
-                _level = 1;
-            else if (value > 10)
-                _level = 10;
-            else
-                _level = value;
-
-            _isLevelSet = true;
+            Name = name;
+            Level = level;
         }
-    }
 
-    public Creature(string name = "Unknown", int level = 1)
-    {
-        Name = name;
-        Level = level;
-    }
+        public abstract void SayHi();
 
-    public Creature() { }
-
-    public void SayHi()
-    {
-        Console.WriteLine($"Hi, I am {Name} and I am level {Level}.");
-    }
-
-    public string Info => $"{Name} <{Level}>";
-
-    public void Upgrade()
-    {
-        if (Level < 10)
-            _level++;
-    }
-
-    public void Go(Direction direction)
-    {
-        
-        Console.WriteLine($"{Name} goes {direction.ToString().ToLower()}.");
-    }
-
-    public void Go(Direction[] directions)
-    {
-        
-        foreach (var direction in directions)
-        {
-            Go(direction);
-        }
-    }
-
-    public void Go(string input)
-    {
-        
-        Direction[] directions = DirectionParser.Parse(input);
-        Go(directions);
+        public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
     }
 }

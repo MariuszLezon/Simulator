@@ -1,34 +1,15 @@
-﻿namespace Simulator;
-
-public class Animals
+﻿namespace Simulator
 {
-    private string _description = "Default"; 
-
-    public required string Description
+    public class Animals
     {
-        get => _description;
-        init
+        public string Description { get; set; }
+        public int Size { get; set; }
+
+        public virtual string Info => $"{Description} <{Size}>";
+
+        public override string ToString()
         {
-            
-            string trimmedDescription = value.Trim();
-
-            
-            if (trimmedDescription.Length < 3)
-                trimmedDescription = trimmedDescription.PadRight(3, '#');
-
-            
-            if (trimmedDescription.Length > 15)
-                trimmedDescription = trimmedDescription.Substring(0, 15).TrimEnd();
-
-            
-            if (char.IsLower(trimmedDescription[0]))
-                trimmedDescription = char.ToUpper(trimmedDescription[0]) + trimmedDescription.Substring(1);
-
-            _description = trimmedDescription;
+            return $"{this.GetType().Name.ToUpper()}: {Info}";
         }
     }
-
-    public uint Size { get; set; } = 3;
-
-    public string Info => $"{Description} <{Size}>";
 }

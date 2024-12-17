@@ -2,10 +2,10 @@
 
 public class Creature
 {
-    private string _name = "Unknown"; 
-    private int _level = 1;          
-    private bool _isNameSet = false; 
-    private bool _isLevelSet = false; 
+    private string _name = "Unknown";
+    private int _level = 1;
+    private bool _isNameSet = false;
+    private bool _isLevelSet = false;
 
     public string Name
     {
@@ -21,11 +21,12 @@ public class Creature
             if (trimmedName.Length < 3)
                 trimmedName = trimmedName.PadRight(3, '#');
 
-            
             if (trimmedName.Length > 25)
                 trimmedName = trimmedName.Substring(0, 25).TrimEnd();
 
-            
+            if (trimmedName.Length < 3)
+                trimmedName = trimmedName.PadRight(3, '#');
+
             if (char.IsLower(trimmedName[0]))
                 trimmedName = char.ToUpper(trimmedName[0]) + trimmedName.Substring(1);
 
@@ -39,10 +40,7 @@ public class Creature
         get => _level;
         set
         {
-            if (_isLevelSet)
-                throw new InvalidOperationException("Level can only be set once.");
-
-           
+            
             if (value < 1)
                 _level = 1;
             else if (value > 10)
@@ -73,5 +71,27 @@ public class Creature
     {
         if (Level < 10)
             _level++;
+    }
+
+    public void Go(Direction direction)
+    {
+        
+        Console.WriteLine($"{Name} goes {direction.ToString().ToLower()}.");
+    }
+
+    public void Go(Direction[] directions)
+    {
+        
+        foreach (var direction in directions)
+        {
+            Go(direction);
+        }
+    }
+
+    public void Go(string input)
+    {
+        
+        Direction[] directions = DirectionParser.Parse(input);
+        Go(directions);
     }
 }
